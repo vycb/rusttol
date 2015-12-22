@@ -3,6 +3,7 @@ extern crate xml;
 extern crate log;
 extern crate env_logger;
 mod node;
+use node::{Node,OwnedNode};
 use std::fs::File;
 use std::io::BufReader;
 
@@ -19,6 +20,24 @@ fn main() {
 	let (mut ct, mut pt, mut ppt):(String, String, String);
 	let file = File::open("sample_4.xml").unwrap();
 	let file = BufReader::new(file);
+	
+	let pnode = Node::new("0", "RootName", Box::new(0), "RootOtherName","RootDesc");
+	let node1 = Node::new("1", "Node1Name", Box::new(&pnode), "OtherName1", "Desc1");
+	let node2 = Node::new("2", "Node2Name", Box::new(&node1), "OtherName2", "Desc2");
+	
+	debug!("pn.name:{}", &pnode.name);
+	debug!("n.name:{}", &node1.name);
+	
+	let p = node1.parent.clone();
+	info!("node1.p.id:{} p.name:{}", &p.id, &p.name);
+	let p2 = node2.parent.clone();
+	debug!("node2.p.id:{} p1.p.name:{}", &p2.id, &p2.name);
+	let n2pp = node2.parent.parent.clone();
+	debug!("n2.p.p.id:{} n2.p.p.name:{}", &n2pp.id, &n2pp.name);
+	
+	debug!("{}", &node1);
+	debug!("{}", &node2);
+		
 	
 	let parser = EventReader::new(file);
 	let mut depth = 0;
