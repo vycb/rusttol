@@ -1,0 +1,14 @@
+[package]
+
+name = "rusttol"
+version = "0.0.1"
+authors = [ "vycb <vycb777@gmail.com>" ]
+
+[[bin]]
+
+name = "rusttol"
+
+[dependencies]
+xml-rs = "*"
+log = "*"
+env_logger = "*"
