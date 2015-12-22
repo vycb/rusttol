@@ -1,15 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE data SYSTEM "abcd.dtd">
-<p:data xmlns:p="urn:x" z=">">
-    <!-- abcd &lt; &gt; &amp; -->
-    <a>test</a>
-    <b>kkss" = ddd' ></b>
-    <![CDATA[
-            <a>ddddd</b>!e3--><!-- ddckx
-    ]]>
-    <c/>
-    <![CDATA[
-    <![CDATA[zzzz]]]]><![CDATA[>]]>
-</p:data>
-
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:7c0ae3ee71a9c94afe1a35480a8c3bf58ffe90b754bccf42f83784971584e9b8
+size 314
