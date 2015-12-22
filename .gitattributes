@@ -1,3 +1,4 @@
-tol.xml.tar.xz filter=lfs diff=lfs merge=lfs -text
-sample_4.xml filter=lfs diff=lfs merge=lfs -text
-tol.xml filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
+*.xz filter=lfs diff=lfs merge=lfs -text
+*.xz filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
