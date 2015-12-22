@@ -30,18 +30,17 @@ impl<'a,T> Node<'a,T> {
 
 
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
-pub struct OwnedNode<T> {
-    /// Node name.
+pub struct OwnedNode {
     pub id: String,
     pub name: String,
-    pub parent: Box<T>,
+    pub parent: Option<Box<OwnedNode>>,
     pub othername: String,
     pub description: String
 }
 
-impl <T>OwnedNode<T> {
+impl OwnedNode {
     #[inline]
-    pub fn new<S: Into<String>>(id: S, name: S, parent: Box<T>, othername: S, description: S) -> OwnedNode<T> {
+    pub fn new<S: Into<String>>(id: S, name: S, parent: Option<Box<OwnedNode>>, othername: S, description: S) -> OwnedNode {
         OwnedNode {
             id: id.into(),
             name: name.into(),
@@ -52,10 +51,10 @@ impl <T>OwnedNode<T> {
     }
 }
 
-impl <T>fmt::Display for OwnedNode<T> {
+impl fmt::Display for OwnedNode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//    	let parent = self.parent;
-        write!(f, "id:{} name:{} other:{} desc:{}", self.id, &*self.name,/* &*self.parent.id, &*self.parent.name,*/ &*self.othername, &*self.description)
+    	let parent = self.parent.clone().unwrap();
+        write!(f, "id:{} name:{} p.id:{} p.name:{} other:{} desc:{}", self.id, &*self.name, &*parent.id, &*parent.name, &*self.othername, &*self.description)
     }
 }
 
@@ -65,11 +64,12 @@ mod tests {
 	
 	#[test]
 	fn node_display() {
-	    let pnode = OwnedNode::new("0", "PNName", Box::new(0), "PNOtherName","PNDesc");
+		let root = OwnedNode { id: "".to_string(), name:"".to_string(), parent:None, othername:"".to_string(), description:"".to_string() };
+	    let pnode = OwnedNode::new("0", "PNName", Some(box root), "PNOtherName","PNDesc");
 	    
-	    let node = OwnedNode::new("1", "NodeName", Box::new(&pnode), "OtherName", "Desc");
+	    let node = OwnedNode::new("1", "NodeName", Some(box pnode.clone()), "OtherName", "Desc");
 			
-			assert_eq!(node.name, "NodeName");
-			assert_eq!(pnode.name, "PNName");
+			assert_eq!(node.name.clone(), "NodeName");
+			assert_eq!(pnode.name.clone(), "PNName");
 	}
 }
