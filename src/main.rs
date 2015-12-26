@@ -24,8 +24,8 @@ fn main() {
 	let sqlc = SqlClient::new();
 	
 	let parser = EventReader::new(file);
-	for e in parser {
-		match e {
+	for el in parser {
+		match el {
 			Ok(XmlEvent::StartElement{ref name, ref attributes, .. }) => {
 				pt = ct;
 				ct = name.local_name.clone();
@@ -69,8 +69,8 @@ fn main() {
 				else if name.local_name == "NODE" {
 				}
 			}
-		Err(e) => {
-			debug!("Error: {}", e);
+		Err(el) => {
+			debug!("Error: {}", el);
 				break;
 			}
 			_ => {}
