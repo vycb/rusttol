@@ -1,27 +1,29 @@
 #![feature(box_syntax)]
 extern crate xml;
-extern crate rusqlite;
 #[macro_use]
 extern crate log;
-extern crate env_logger;
-mod node;
+//extern crate env_logger;
+pub mod node;
 use node::{Node};
 use std::fs::File;
 use std::io::BufReader;
 use xml::reader::{EventReader, XmlEvent};
-use rusqlite::Connection;
+use std::env;
 
-fn main() {
-	env_logger::init().unwrap();
+pub trait DataStore {
+	fn save(&self, node: &Node);
+}
+
+pub fn xml_walk<T: DataStore>(ds: &T) {
+	
 	let (mut node, mut pnode, mut ct, mut pt):(Node, Node, String, String);
 	pt="".to_string(); ct="".to_string();
 	node = Node { id: "".to_string(), name:"".to_string(), parent:None, othername:"".to_string(), description:"".to_string() };
 	pnode = Node { id: "".to_string(), name:"".to_string(), parent:None, othername:"".to_string(), description:"".to_string() };
 	
-	let file = File::open("tol.xml").unwrap();
+	let file = File::open(getpath()).unwrap();
 	let file = BufReader::new(file);
 	
-	let sqlc = SqlClient::new();
 	
 	let parser = EventReader::new(file);
 	for el in parser {
@@ -44,7 +46,7 @@ fn main() {
 					}
 				}
 				else if name.local_name == "NODES" {
-					sqlc.save(&node);
+					ds.save(&node);
 				}
 			}
 			Ok(XmlEvent::CData(ref data) ) => {
@@ -60,7 +62,7 @@ fn main() {
 			}
 			Ok(XmlEvent::EndElement { name }) => {
 				if name.local_name == "NODE" {
-					sqlc.save(&node);
+					ds.save(&node);
 				}
 				if name.local_name == "NODES" {
 //					debug!("Befor p.id:{} p.name:{}", pnode.id, pnode.name);
@@ -78,31 +80,15 @@ fn main() {
 	}
 }
 
+fn getpath() -> String {
+    let args: Vec<String> = env::args().collect();
 
-struct SqlClient {
-	conn: Connection
+    match args.len() {
+        0 => {
+            panic!("first argument must be a path to xml file")
+        },
+        _ => args[1].clone()
+    }
 }
 
-
-impl SqlClient {
-	
-	pub fn new() -> SqlClient {
-		SqlClient{
-			conn: Connection::open("db/db.sqlite").unwrap_or_else(|e|{ panic!("Connection error:{}", e) } )
-		}
-	}
-	
-	pub fn save(&self, node: &Node) {
-		
-		let parent = node.parent.clone().unwrap();
-		
-	    debug!("Save id:{} name:{} p.id:{} p.name:{} oname:{} desc:{}",
-	                 &node.id, &node.name, &parent.id, &parent.name, &node.othername, &node.description);
-	    
-	    self.conn.execute("INSERT OR IGNORE INTO tol (id, name, parent, othername, description)
-	                  VALUES ($1, $2, $3, $4, $5)",
-	                 &[&node.id.to_string(), &node.name.to_string(), &parent.id.to_string(), &node.othername.to_string(), &node.description.to_string()]).unwrap_or_else(|e|{ panic!("INSERT tol error:{}", e) });
-	    
-	}
-}
 
