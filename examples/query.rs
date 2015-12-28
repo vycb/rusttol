@@ -30,12 +30,12 @@ fn main() {
 		othername text,
 		description text
 		)", &[]).unwrap();
-    let me = Person {
-        id: 1,
-        name: "Brahma Deve".to_string(),
-        time_created: time::get_time(),
-        data: Some(vec!(3))
-    };
+//    let me = Person {
+//        id: 1,
+//        name: "Brahma Deve".to_string(),
+//        time_created: time::get_time(),
+//        data: Some(vec!(3))
+//    };
 //    conn.execute("INSERT INTO person (name, time_created, data)
 //                  VALUES ($1, $2, $3)",
 //                 &[&me.name, &me.time_created, &me.data]).unwrap();

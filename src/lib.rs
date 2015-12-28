@@ -2,7 +2,7 @@
 extern crate xml;
 #[macro_use]
 extern crate log;
-//extern crate env_logger;
+extern crate rustc_serialize;
 pub mod node;
 use node::{Node};
 use std::fs::File;
@@ -84,10 +84,11 @@ fn getpath() -> String {
     let args: Vec<String> = env::args().collect();
 
     match args.len() {
-        0 => {
+        1 => {
             panic!("first argument must be a path to xml file")
         },
-        _ => args[1].clone()
+        2 => args[1].clone(),
+		n => { debug!("rusttol n args:{}", n); args[1].clone()}
     }
 }
 

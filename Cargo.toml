@@ -6,8 +6,8 @@ authors = [ "vycb <vycb777@gmail.com>" ]
 
 [dependencies]
 xml-rs = "*"
-time = "*"
-
+rustc-serialize = "*"
 rusqlite = "*"
+time = "*"
 log = "*"
 env_logger = "*"

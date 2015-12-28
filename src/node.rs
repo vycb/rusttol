@@ -1,7 +1,8 @@
 use std::fmt;
+use rustc_serialize::json::{ToJson, Json};
+use std::collections::HashMap;
 
-
-#[derive(Clone, Eq, PartialEq, Hash, Debug)]
+#[derive(Clone, Eq, PartialEq, Hash, Debug, RustcDecodable, RustcEncodable)]
 pub struct Node {
     pub id: String,
     pub name: String,
@@ -20,6 +21,19 @@ impl Node {
             othername: othername.into(),
             description: description.into()
         }
+    }
+}
+
+impl ToJson for Node {
+    fn to_json(&self) -> Json {
+        let mut m: HashMap<String, Json> = HashMap::new();
+        m.insert("id".to_string(), self.name.to_json());
+        m.insert("name".to_string(), self.name.to_json());
+        m.insert("othername".to_string(), self.othername.to_json());
+        m.insert("description".to_string(), self.description.to_json());
+        let parent = self.parent.clone().unwrap();
+        m.insert("parent".to_string(), (parent.id.clone()+":"+&parent.name.clone()).to_json());
+        m.to_json()
     }
 }
 
